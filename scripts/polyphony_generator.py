@@ -1,7 +1,7 @@
 # Polyphonic-objects generator
 import os
 
-LOCATION = r'/home/olivier/.wine/drive_c/users/olivier/Application Data/REAPER/Effects/belangeo'
+LOCATION = '..'
 MAINFILE = 'cookdsp.jsfx-inc'
 OUTPATH = os.path.join(LOCATION, "cookdsp", "pobjects.jsfx-inc")
 DOCFILE = 'Pobjects_doc.md'
@@ -12,7 +12,8 @@ objnames = {"delay": [], "sdelay": [], "moog": [], "comb": [], "allpass": [],
             "follow": [], "zcross": [], "yin": [], "onset": [],
             "phasor": [], "sine": [], "random": [], "masr": [],
             "compress": [], "gate": [], "expand": [], "eq": [], "grains": [],
-            "disto": [], "harmon": [], "wgverb": [], "blosc": []  
+            "disto": [], "harmon": [], "wgverb": [], "blosc": [], "chorus": [],
+            "flanger": [], "waveguide": []
             }
 
 # Open cookdsp main file
@@ -46,6 +47,7 @@ for line in lines:
                             objnames[obj].append((fname, num))
 
 objlist = sorted(objnames.keys())
+
 objlist = ["`P%s`" % obj for obj in objlist]
 objstr = ""
 for i, obj in enumerate(objlist):
@@ -90,10 +92,9 @@ for obj in objnames:
     f.write(head + objects + close)
 
     # Methods
-    close = ");\n"
     for arg in argnames:
         name, num = arg[0], arg[1]
-        if "_do" in name: ### do function
+        if name.endswith("_do"): ### do function
             close = "    this.outlist;\n);\n\n"
             if num == 1:
                 creator = "function P%s_do(signal)\n(\n    num = signal[0];\n"
